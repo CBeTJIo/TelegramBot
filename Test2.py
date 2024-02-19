@@ -42,13 +42,13 @@ bot = TeleBot(token_bot, state_storage=state_storage)
 
 en_word = ''
 ru_word = ''
-known_users = []
-userStep = {}
-buttons = []
-for user in session.query(Client.name, Client.user_step).select_from(Client).all():
-    known_users.append(int(user[0]))
-    new_dict = {user[0]: user[1]}
-    userStep.update(new_dict)
+# known_users = []
+# userStep = {}
+# buttons = []
+# for user in session.query(Client.name, Client.user_step).select_from(Client).all():
+#     known_users.append(int(user[0]))
+#     new_dict = {user[0]: user[1]}
+#     userStep.update(new_dict)
 
 
 def show_hint(*lines):
@@ -71,39 +71,53 @@ class MyStates(StatesGroup):
     another_words = State()
 
 
-def get_user_step(uid):
-    if uid in userStep:
-        return userStep[uid]
-    else:
-        known_users.append(uid)
-        userStep[uid] = 0
-        print("New user detected, who hasn't used \"/start\" yet")
-        return 0
+# def get_user_step(uid):
+#     if uid in userStep:
+#         return userStep[uid]
+#     else:
+#         known_users.append(uid)
+#         userStep[uid] = 0
+#         print("New user detected, who hasn't used \"/start\" yet")
+#         return 0
 
 
 @bot.message_handler(commands=['start'])
 def create_cards(message):
     cid = message.chat.id
-    if cid not in known_users:
-        known_users.append(cid)
-        userStep[cid] = 0
     markup = types.ReplyKeyboardMarkup(row_width=2)
 
+    # Поиск шага(слова) на котором остановился пользователь или добавление нового пользователя
     for search_name in session.query(Client.id, Client.user_step, Client.name).select_from(Client).all():
         if int(search_name[2]) == cid:
             req_step = search_name[1]
+            user_id = search_name[0]
+        else: # Добавление нового пользователя и слов к нему
+            new_client = Client(name=cid, user_step=0)
+            session.add(new_client)
+            new_user = session.query(Client).filter(Client.name == str(cid)).first()
+            user_id = new_user.id
+            req_step = 0
+            session.add(Words(en_name='cat', ru_name='кошка', client_id=user_id))
+            session.add(Words(en_name='bus', ru_name='автобус', client_id=user_id))
+            session.add(Words(en_name='name', ru_name='имя', client_id=user_id))
+            session.add(Words(en_name='man', ru_name='мужчина', client_id=user_id))
+            session.add(Words(en_name='dog', ru_name='собака', client_id=user_id))
+            session.commit()
 
+
+    # Поиск слова для перевода согласно шага
     x = 0
     all_words = []
-    for search_word in session.query(Words.en_name, Words.ru_name).select_from(Words).filter(Words.client_id == 1).all():
+    list_word = session.query(Words.en_name, Words.ru_name).select_from(Words).filter(Words.client_id == int(user_id)).all()
+    for search_word in list_word:
         all_words.append(search_word[0])
         if x == req_step:
             target_word = search_word[0]
             translate = search_word[1]
         x += 1
 
-    all_words.remove(target_word)
 
+    all_words.remove(target_word)
     random.shuffle(all_words)
 
     global buttons

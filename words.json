@@ -1,5 +1,4 @@
 [
-  {"model": "client", "name": "1154470801", "user_step": 0},
   {"model": "client", "name": "559975254", "user_step": 1},
   {"model": "words", "en_name": "word", "ru_name": "слово", "client_id": 1},
   {"model": "words", "en_name": "he", "ru_name": "он", "client_id": 1},
@@ -12,10 +11,5 @@
   {"model": "words", "en_name": "cat", "ru_name": "кошка", "client_id": 1},
   {"model": "words", "en_name": "dog", "ru_name": "собака", "client_id": 1},
   {"model": "words", "en_name": "house", "ru_name": "дом", "client_id": 1},
-  {"model": "words", "en_name": "family", "ru_name": "семья", "client_id": 1},
-  {"model": "words", "en_name": "cat", "ru_name": "кошка", "client_id": 2},
-  {"model": "words", "en_name": "dog", "ru_name": "собака", "client_id": 2},
-  {"model": "words", "en_name": "house", "ru_name": "дом", "client_id": 2},
-  {"model": "words", "en_name": "family", "ru_name": "семья", "client_id": 2},
-  {"model": "words", "en_name": "family", "ru_name": "семья", "client_id": 2}
+  {"model": "words", "en_name": "family", "ru_name": "семья", "client_id": 1}
 ]
