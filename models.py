@@ -20,15 +20,6 @@ class Words(Base):
 
     client = relationship(Client, backref="words")
 
-# class Step(Base):
-#     __tablename__ = "step"
-#
-#     id = sq.Column(sq.Integer, primary_key=True)
-#     number = sq.Column(sq.Integer, nullable=False)
-#     client_id = sq.Column(sq.Integer, sq.ForeignKey("client.id"), nullable=False)
-#
-#     client = relationship(Client, backref="step")
-
 def create_tables(engine):
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
